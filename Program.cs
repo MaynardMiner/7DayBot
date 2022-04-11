@@ -27,7 +27,6 @@ namespace _7DayBot
             // since we cannot make the entry method asynchronous,
             // let's pass the execution to asynchronous code
             var prog = new Program();
-
             Thread t = new Thread(Server_Reset.Daily_Reset);
             t.Start();
             prog.RunBotAsync().GetAwaiter().GetResult();
