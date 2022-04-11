@@ -7,13 +7,14 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Diagnostics;
 using System.Threading;
-
+using System.Runtime.InteropServices;
 
 namespace _7DayBot
 {
         public class ExampleUngrouppedCommands : BaseCommandModule
         {
-            [Command("!restart")] // let's define this method as a command
+
+        [Command("restart")] // let's define this method as a command
             [Description("Restarts the 7dtd server")] // this will be displayed to tell users what this command does when they invoke help
             public async Task Restart(CommandContext ctx) // this command takes no arguments
             {
@@ -26,8 +27,9 @@ namespace _7DayBot
                     if(!p.HasExited)
                     {
                         p.CloseMainWindow();
-                    }
+                        IntPtr h = p.MainWindowHandle;
                 }
+            }
                 await Task.Delay(10000);
                 foreach(Process p in processes)
                 {
@@ -56,8 +58,12 @@ namespace _7DayBot
                     return;
                 }
                 await ctx.RespondAsync("Restarting Server...");
-                System.Diagnostics.Process.Start(@"C:\Program Files(x86)\Steam\steamapps\common\7 Days to Die Dedicated Server\startdedicated.bat");
-                await Task.Delay(5000);
+            Process proc = new Process();
+            proc.StartInfo.FileName = @"C:\Program Files (x86)\Steam\steamapps\common\7 Days to Die Dedicated Server\start.lnk";
+            proc.StartInfo.CreateNoWindow = false;
+            proc.StartInfo.UseShellExecute = true;
+            proc.Start();
+            await Task.Delay(5000);
                 processes = Process.GetProcessesByName("7DaysToDieServer");
                 if(processes.Length > 0)
                 {

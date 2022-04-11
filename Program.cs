@@ -1,18 +1,23 @@
-﻿using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Exceptions;
+using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DSPlus.Examples
+namespace _7DayBot
 {
     public class Program
     {
-        public readonly EventId BotEventId = new EventId(42, "Bot-Ex01");
+        public readonly EventId BotEventId = new EventId(42, "Bot-Ex02");
 
         public DiscordClient Client { get; set; }
+        public CommandsNextExtension Commands { get; set; }
 
         public static void Main(string[] args)
         {
@@ -39,7 +44,7 @@ namespace DSPlus.Examples
                 TokenType = TokenType.Bot,
 
                 AutoReconnect = true,
-                MinimumLogLevel = LogLevel.Debug
+                MinimumLogLevel = LogLevel.Debug,
             };
 
             // then we want to instantiate our client
@@ -51,8 +56,36 @@ namespace DSPlus.Examples
             this.Client.GuildAvailable += this.Client_GuildAvailable;
             this.Client.ClientErrored += this.Client_ClientError;
 
+            // up next, let's set up our commands
+            var ccfg = new CommandsNextConfiguration
+            {
+                // let's use the string prefix defined in config.json
+                StringPrefixes = new[] { cfgjson.CommandPrefix },
+
+                // enable responding in direct messages
+                EnableDms = true,
+
+                // enable mentioning the bot as a command prefix
+                EnableMentionPrefix = true
+            };
+
+            // and hook them up
+            this.Commands = this.Client.UseCommandsNext(ccfg);
+
+            // let's hook some command events, so we know what's 
+            // going on
+            this.Commands.CommandExecuted += this.Commands_CommandExecuted;
+            this.Commands.CommandErrored += this.Commands_CommandErrored;
+
+            this.Commands.RegisterCommands<ExampleUngrouppedCommands>();
+
             // finally, let's connect and log in
             await this.Client.ConnectAsync();
+
+            // when the bot is running, try doing <prefix>help
+            // to see the list of registered commands, and 
+            // <prefix>help <command> to see help about specific
+            // command.
 
             // and this is to prevent premature quitting
             await Task.Delay(-1);
@@ -91,6 +124,42 @@ namespace DSPlus.Examples
             // a completed task, so that no additional work
             // is done
             return Task.CompletedTask;
+        }
+
+        private Task Commands_CommandExecuted(CommandsNextExtension sender, CommandExecutionEventArgs e)
+        {
+            // let's log the name of the command and user
+            e.Context.Client.Logger.LogInformation(BotEventId, $"{e.Context.User.Username} successfully executed '{e.Command.QualifiedName}'");
+
+            // since this method is not async, let's return
+            // a completed task, so that no additional work
+            // is done
+            return Task.CompletedTask;
+        }
+
+        private async Task Commands_CommandErrored(CommandsNextExtension sender, CommandErrorEventArgs e)
+        {
+            // let's log the error details
+            e.Context.Client.Logger.LogError(BotEventId, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
+
+            // let's check if the error is a result of lack
+            // of required permissions
+            if (e.Exception is ChecksFailedException ex)
+            {
+                // yes, the user lacks required permissions, 
+                // let them know
+
+                var emoji = DiscordEmoji.FromName(e.Context.Client, ":no_entry:");
+
+                // let's wrap the response into an embed
+                var embed = new DiscordEmbedBuilder
+                {
+                    Title = "Access denied",
+                    Description = $"{emoji} You do not have the permissions required to execute this command.",
+                    Color = new DiscordColor(0xFF0000) // red
+                };
+                await e.Context.RespondAsync(embed);
+            }
         }
     }
 
