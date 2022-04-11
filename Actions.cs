@@ -38,12 +38,12 @@ namespace Commands.Actions
                     SetForegroundWindow(h);
                     p.CloseMainWindow();
                     await Task.Delay(3000);
-                    SendKeys.Send("{ENTER}");
+                    SendKeys.SendWait("{ENTER}");
                 }
             }
 
             /// Give some time for them to close
-            await Task.Delay(5000);
+            await Task.Delay(30000);
 
             /// Check if it closed- If it didn't, kill it. Inform user
             foreach (Process p in processes)
