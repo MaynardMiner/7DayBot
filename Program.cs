@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Commands.Reset;
+using Globals;
 
 namespace _7DayBot
 {
@@ -19,7 +20,6 @@ namespace _7DayBot
     {
         public readonly EventId BotEventId = new EventId(42, "Bot-Ex02");
 
-        public DiscordClient Client { get; set; }
         public CommandsNextExtension Commands { get; set; }
 
         public static void Main(string[] args)
@@ -29,6 +29,8 @@ namespace _7DayBot
             var prog = new Program();
             Thread t = new Thread(Server_Reset.Daily_Reset);
             t.Start();
+            Thread u = new Thread(Server_Reset.Check_Server);
+            u.Start();
             prog.RunBotAsync().GetAwaiter().GetResult();
         }
 
@@ -53,13 +55,13 @@ namespace _7DayBot
             };
 
             // then we want to instantiate our client
-            this.Client = new DiscordClient(cfg);
+            Global.cl = new DiscordClient(cfg);
 
             // next, let's hook some events, so we know
             // what's going on
-            this.Client.Ready += this.Client_Ready;
-            this.Client.GuildAvailable += this.Client_GuildAvailable;
-            this.Client.ClientErrored += this.Client_ClientError;
+            Global.cl.Ready += this.Client_Ready;
+            Global.cl.GuildAvailable += this.Client_GuildAvailable;
+            Global.cl.ClientErrored += this.Client_ClientError;
 
             // up next, let's set up our commands
             var ccfg = new CommandsNextConfiguration
@@ -75,7 +77,7 @@ namespace _7DayBot
             };
 
             // and hook them up
-            this.Commands = this.Client.UseCommandsNext(ccfg);
+            this.Commands = Global.cl.UseCommandsNext(ccfg);
 
             // let's hook some command events, so we know what's 
             // going on
@@ -85,7 +87,7 @@ namespace _7DayBot
             this.Commands.RegisterCommands<Server_Commands>();
 
             // finally, let's connect and log in
-            await this.Client.ConnectAsync();
+            await Global.cl.ConnectAsync();
 
             // when the bot is running, try doing <prefix>help
             // to see the list of registered commands, and 

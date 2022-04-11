@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using _7DayBot;
+using DSharpPlus.Entities;
+using Globals;
 
 namespace Commands.Reset
 {
@@ -36,6 +41,56 @@ namespace Commands.Reset
                     afternoon_reset = false;
                 }
                 /// Wait 10 seconds, check again.
+                Thread.Sleep(10000);
+            }
+        }
+
+        public static void Check_Server()
+        {
+            int port = 26900; //<--- This is your value
+            string ip = "127.0.0.1";
+            bool StatusUp = false;
+            bool first = true;
+
+            while (true)
+            {
+                if (Global.cl != null)
+                {
+                    TcpClient tc = new TcpClient();
+                    try
+                    {
+                        tc.Connect(ip, port);
+                    }
+                    catch
+                    {
+
+                    }
+                        bool stat = tc.Connected;
+                        if (stat)
+                        {
+                            if (!StatusUp || first)
+                            {
+                                DiscordActivity activity = new DiscordActivity("Server is Online", ActivityType.Streaming);
+                                Global.cl.UpdateStatusAsync(activity).GetAwaiter().GetResult();
+                                Console.WriteLine("Changing Status on Discord...");
+                                StatusUp = true;
+                            }
+                        }
+                        else
+                        {
+                            if (StatusUp || first)
+                            {
+                                DiscordActivity activity = new DiscordActivity("Server is Offline", ActivityType.Streaming);
+                                Global.cl.UpdateStatusAsync(activity).GetAwaiter().GetResult();
+                                Console.WriteLine("Changing Status on Discord...");
+                                StatusUp = false;
+                            }
+                        }
+                    tc.Close();
+                    tc.Dispose();
+                    first = false;
+                    Thread.Sleep(20000);
+                }
                 Thread.Sleep(10000);
             }
         }
