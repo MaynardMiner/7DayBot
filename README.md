@@ -32,3 +32,13 @@ IP Address: Ip Address of the server for checking connection
 Port: Port of the server for checking connection
 
 Application Shortcut Path: Shortcut to restart the server (Suggest using the shortcut so that it runs in new environment)
+
+## Features
+
+- Will notate if server is online
+
+- `restart` command to restart the server
+
+## Limitations
+
+Currently only works for Windows due to having System.Windows.Forms feature to close application windows. Removing that should make it work for linux.
