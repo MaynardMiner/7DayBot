@@ -10,9 +10,9 @@ using _7DayBot;
 using DSharpPlus.Entities;
 using Globals;
 
-namespace Commands.Reset
+namespace Commands.Admin
 {
-    public static class Server_Reset
+    public static class Connectivity
     {
         public static void Daily_Reset( )
         {

@@ -11,7 +11,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Commands.Reset;
+using Commands.Admin;
 using Globals;
 
 namespace _7DayBot
@@ -27,9 +27,9 @@ namespace _7DayBot
             // since we cannot make the entry method asynchronous,
             // let's pass the execution to asynchronous code
             var prog = new Program();
-            Thread t = new Thread(Server_Reset.Daily_Reset);
+            Thread t = new Thread(Connectivity.Daily_Reset);
             t.Start();
-            Thread u = new Thread(Server_Reset.Check_Server);
+            Thread u = new Thread(Connectivity.Check_Server);
             u.Start();
             prog.RunBotAsync().GetAwaiter().GetResult();
         }
