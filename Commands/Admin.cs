@@ -41,8 +41,6 @@ namespace Commands.Admin
 
         public static void Check_Server()
         {
-            int port = Config.Port; //<--- This is your value
-            string ip = Config.Ip;
             bool StatusUp = false;
             bool first = true;
 
@@ -53,7 +51,7 @@ namespace Commands.Admin
                     TcpClient tc = new TcpClient();
                     try
                     {
-                        tc.Connect(ip, port);
+                        tc.Connect(Config.Ip, Config.Port);
                     }
                     catch
                     {
@@ -66,7 +64,7 @@ namespace Commands.Admin
                             {
                                 DiscordActivity activity = new DiscordActivity("Server is Online", ActivityType.Streaming);
                                 Global.cl.UpdateStatusAsync(activity).GetAwaiter().GetResult();
-                                Console.WriteLine("Changing Status on Discord...");
+                                Console.WriteLine("Changing Status on Discord...Server was online at Port " + Config.Port + " with IP " + Config.Ip);
                                 StatusUp = true;
                             }
                         }
@@ -76,7 +74,7 @@ namespace Commands.Admin
                             {
                                 DiscordActivity activity = new DiscordActivity("Server is Offline", ActivityType.Streaming);
                                 Global.cl.UpdateStatusAsync(activity).GetAwaiter().GetResult();
-                                Console.WriteLine("Changing Status on Discord...");
+                                Console.WriteLine("Changing Status on Discord...Server was offline at Port " + Config.Port + " with IP " + Config.Ip);
                                 StatusUp = false;
                             }
                         }
