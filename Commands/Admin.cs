@@ -8,6 +8,7 @@ namespace Commands.Admin
 {
     public static class Connectivity
     {
+        /// Thread that will check time and reset the server at 4pm and 4am
         public static void Daily_Reset( )
         {
             bool morning_reset = false;
@@ -39,6 +40,7 @@ namespace Commands.Admin
             }
         }
 
+        /// Thread that will check server connection, and update discord bot status to reflect.
         public static void Check_Server()
         {
             bool StatusUp = false;
