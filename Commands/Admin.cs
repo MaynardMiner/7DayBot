@@ -8,6 +8,7 @@ namespace Commands.Admin
 {
     public static class Connectivity
     {
+        /// Thread that will check time and reset the server at 4pm and 4am
         public static void Daily_Reset( )
         {
             bool morning_reset = false;
@@ -41,10 +42,9 @@ namespace Commands.Admin
             }
         }
 
+        /// Thread that will check server connection, and update discord bot status to reflect.
         public static void Check_Server()
         {
-            int port = Config.Port; //<--- This is your value
-            string ip = Config.Ip;
             bool StatusUp = false;
             bool first = true;
 
@@ -55,7 +55,7 @@ namespace Commands.Admin
                     TcpClient tc = new TcpClient();
                     try
                     {
-                        tc.Connect(ip, port);
+                        tc.Connect(Config.Ip, Config.Port);
                     }
                     catch
                     {
@@ -68,7 +68,7 @@ namespace Commands.Admin
                             {
                                 DiscordActivity activity = new DiscordActivity("Server is Online", ActivityType.Streaming);
                                 Global.cl.UpdateStatusAsync(activity).GetAwaiter().GetResult();
-                                Console.WriteLine("Changing Status on Discord...");
+                                Console.WriteLine("Changing Status on Discord...Server was online at Port " + Config.Port + " with IP " + Config.Ip);
                                 StatusUp = true;
                             }
                         }
@@ -78,7 +78,7 @@ namespace Commands.Admin
                             {
                                 DiscordActivity activity = new DiscordActivity("Server is Offline", ActivityType.Streaming);
                                 Global.cl.UpdateStatusAsync(activity).GetAwaiter().GetResult();
-                                Console.WriteLine("Changing Status on Discord...");
+                                Console.WriteLine("Changing Status on Discord...Server was offline at Port " + Config.Port + " with IP " + Config.Ip);
                                 StatusUp = false;
                             }
                         }
