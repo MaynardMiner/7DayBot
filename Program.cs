@@ -1,4 +1,5 @@
-﻿using DSharpPlus;
+﻿using Commands.Server;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
@@ -9,8 +10,6 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Commands.Server;
-using Commands.Actions;
 
 namespace _7DayBot
 {

@@ -1,20 +1,17 @@
 ﻿using DSharpPlus.CommandsNext;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Commands.Actions
 {
-   public class ToDo
+    public class ToDo
     {
-        public async Task Restart(CommandContext ctx = null)
+        public static async Task Restart(CommandContext ctx = null)
         {
             ///Parameters
-            string filepath = @"C:\Program Files(x86)\Steam\steamapps\common\7 Days to Die Dedicated Server\startdedicated.bat";
+            string filepath = @"C:\Program Files (x86)\Steam\steamapps\common\7 Days to Die Dedicated Server\start.lnk";
             bool allclosed = true;
             Process[] processes = Process.GetProcessesByName("7DaysToDieServer");
             bool Isctx = ctx != null;
@@ -24,6 +21,7 @@ namespace Commands.Actions
             {
                 await ctx.RespondAsync("There were " + processes.Length + " processes running...Attempting to close them all....Please Wait.");
             }
+            Console.WriteLine("There were " + processes.Length + " processes running...Attempting to close them all....Please Wait.");
 
             /// Close each process gently
             foreach (Process p in processes)
@@ -49,6 +47,7 @@ namespace Commands.Actions
                     {
                         await ctx.RespondAsync("Process id " + p.Id + " did not close gracefully. Will try to force");
                     }
+                    Console.WriteLine("Process id " + p.Id + " did not close gracefully. Will try to force");
                     p.Kill();
                 }
             }
@@ -73,15 +72,22 @@ namespace Commands.Actions
                 {
                     await ctx.RespondAsync("Could not restart server, notify admin...");
                 }
+                Console.WriteLine("Could not restart server, notify admin...");
                 return;
             }
 
             /// Restart the Server now.
-            if(Isctx)
+            if (Isctx)
             {
                 await ctx.RespondAsync("Restarting Server...");
             }
-            System.Diagnostics.Process.Start(@"C:\Program Files(x86)\Steam\steamapps\common\7 Days to Die Dedicated Server\startdedicated.bat");
+            Console.WriteLine("Restarting Server...");
+
+            Process proc = new Process();
+            proc.StartInfo.FileName = filepath;
+            proc.StartInfo.CreateNoWindow = false;
+            proc.StartInfo.UseShellExecute = true;
+            proc.Start();
             await Task.Delay(5000);
 
             /// Confirm server was restarted.
@@ -92,10 +98,9 @@ namespace Commands.Actions
                 {
                     await ctx.RespondAsync("Server has restarted...");
                 }
+                Console.WriteLine("Server has restarted...");
             }
             return;
-
-
         }
     }
 }
