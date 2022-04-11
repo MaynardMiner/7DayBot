@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -8,6 +9,10 @@ namespace Commands.Actions
 {
     public class ToDo
     {
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
         public static async Task Restart(CommandContext ctx = null)
         {
             ///Parameters
@@ -15,6 +20,7 @@ namespace Commands.Actions
             bool allclosed = true;
             Process[] processes = Process.GetProcessesByName("7DaysToDieServer");
             bool Isctx = ctx != null;
+
 
             /// Notify commamd was recieved
             if (Isctx)
@@ -28,6 +34,8 @@ namespace Commands.Actions
             {
                 if (!p.HasExited)
                 {
+                    IntPtr h = p.MainWindowHandle;
+                    SetForegroundWindow(h);
                     p.CloseMainWindow();
                     await Task.Delay(3000);
                     SendKeys.Send("{ENTER}");
