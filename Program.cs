@@ -9,6 +9,8 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Commands.Server;
+using Commands.Actions;
 
 namespace _7DayBot
 {
@@ -77,7 +79,7 @@ namespace _7DayBot
             this.Commands.CommandExecuted += this.Commands_CommandExecuted;
             this.Commands.CommandErrored += this.Commands_CommandErrored;
 
-            this.Commands.RegisterCommands<ExampleUngrouppedCommands>();
+            this.Commands.RegisterCommands<Server_Commands>();
 
             // finally, let's connect and log in
             await this.Client.ConnectAsync();
