@@ -19,13 +19,15 @@ namespace Commands.Admin
                 ///Morning reset- ONly once.
                 if (date.Hour == 4 && date.Minute == 0 && morning_reset == false)
                 {
-                    Actions.ToDo.Restart().GetAwaiter().GetResult();
+                    Thread thread = new Thread(() => Restart.ToDo.Start().GetAwaiter().GetResult());
+                    thread.Start();
                     morning_reset = true;
                 }
                 // Afternoon reset- Only once.
                 if (date.Hour == 16 && date.Minute == 0 && afternoon_reset == false)
                 {
-                    Actions.ToDo.Restart().GetAwaiter().GetResult();
+                    Thread thread = new Thread(() => Restart.ToDo.Start().GetAwaiter().GetResult());
+                    thread.Start();
                     afternoon_reset = true;
                 }
                 /// Reset flags at 11pm.

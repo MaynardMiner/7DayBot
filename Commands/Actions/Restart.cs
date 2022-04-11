@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Commands.Globals;
 
-namespace Commands.Actions
+namespace Commands.Restart
 {
     public class ToDo
     {
@@ -14,7 +14,7 @@ namespace Commands.Actions
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        public static async Task Restart(CommandContext ctx = null)
+        public static async Task Start(CommandContext ctx = null)
         {
             ///Parameters
             string filepath = Config.AppPath;
