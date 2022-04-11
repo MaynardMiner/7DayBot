@@ -10,10 +10,6 @@ namespace Commands.Globals
 
     public static class Config
     {
-        public static volatile string Token;
-
-        public static volatile string CommandPrefix;
-
         public static volatile string AppName;
 
         public static volatile bool NeedsEnter;

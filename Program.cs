@@ -47,10 +47,8 @@ namespace _7DayBot
             var cfgjson = JsonConvert.DeserializeObject<ConfigJson>(json);
             Config.AppName = cfgjson.AppName;
             Config.AppPath = cfgjson.AppPath;
-            Config.CommandPrefix = cfgjson.CommandPrefix;
             Config.Ip = cfgjson.Ip;
             Config.NeedsEnter = cfgjson.NeedsEnter;
-            Config.Token = cfgjson.Token;
             Config.Port = cfgjson.Port;
 
             var cfg = new DiscordConfiguration
