@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Commands.Reset;
 
 namespace _7DayBot
 {
@@ -25,6 +27,9 @@ namespace _7DayBot
             // since we cannot make the entry method asynchronous,
             // let's pass the execution to asynchronous code
             var prog = new Program();
+
+            Thread t = new Thread(Server_Reset.Daily_Reset);
+            t.Start();
             prog.RunBotAsync().GetAwaiter().GetResult();
         }
 
