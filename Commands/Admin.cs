@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using _7DayBot;
 using DSharpPlus.Entities;
-using Globals;
+using Commands.Globals;
 
 namespace Commands.Admin
 {
@@ -47,8 +47,8 @@ namespace Commands.Admin
 
         public static void Check_Server()
         {
-            int port = 26900; //<--- This is your value
-            string ip = "127.0.0.1";
+            int port = Config.Port; //<--- This is your value
+            string ip = Config.Ip;
             bool StatusUp = false;
             bool first = true;
 

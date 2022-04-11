@@ -1,9 +1,9 @@
 ﻿{
-  "token": "",
-  "prefix": "!",
+  "Token": "",
+  "Prefix": "!",
   "Application Name": "7DaysToDieServer",
   "Tap Enter To Close" : true,
-  "Ip Address": 127.0.0.1,
+  "Ip Address": "127.0.0.1",
   "Port": "26900",
   "Application Shortcut Path": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\7 Days to Die Dedicated Server\\start.lnk"
 }

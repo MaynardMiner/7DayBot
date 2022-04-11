@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Commands.Globals;
 
 namespace Commands.Actions
 {
@@ -16,9 +17,10 @@ namespace Commands.Actions
         public static async Task Restart(CommandContext ctx = null)
         {
             ///Parameters
-            string filepath = @"C:\Program Files (x86)\Steam\steamapps\common\7 Days to Die Dedicated Server\start.lnk";
+            string filepath = Config.AppPath;
+            string appname = Config.AppName;
             bool allclosed = true;
-            Process[] processes = Process.GetProcessesByName("7DaysToDieServer");
+            Process[] processes = Process.GetProcessesByName(appname);
             bool Isctx = ctx != null;
 
 
@@ -38,7 +40,10 @@ namespace Commands.Actions
                     SetForegroundWindow(h);
                     p.CloseMainWindow();
                     await Task.Delay(3000);
-                    SendKeys.SendWait("{ENTER}");
+                    if (Config.NeedsEnter)
+                    {
+                        SendKeys.SendWait("{ENTER}");
+                    }
                 }
             }
 
@@ -99,7 +104,7 @@ namespace Commands.Actions
             await Task.Delay(5000);
 
             /// Confirm server was restarted.
-            processes = Process.GetProcessesByName("7DaysToDieServer");
+            processes = Process.GetProcessesByName(appname);
             if (processes.Length > 0)
             {
                 if (Isctx)

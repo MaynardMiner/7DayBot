@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Commands.Admin;
-using Globals;
+using Commands.Globals;
 
 namespace _7DayBot
 {
@@ -45,6 +45,14 @@ namespace _7DayBot
             // next, let's load the values from that file
             // to our client's configuration
             var cfgjson = JsonConvert.DeserializeObject<ConfigJson>(json);
+            Config.AppName = cfgjson.AppName;
+            Config.AppPath = cfgjson.AppPath;
+            Config.CommandPrefix = cfgjson.CommandPrefix;
+            Config.Ip = cfgjson.Ip;
+            Config.NeedsEnter = cfgjson.NeedsEnter;
+            Config.Token = cfgjson.Token;
+            Config.Port = cfgjson.Port;
+
             var cfg = new DiscordConfiguration
             {
                 Token = cfgjson.Token,
@@ -155,7 +163,6 @@ namespace _7DayBot
             {
                 // yes, the user lacks required permissions, 
                 // let them know
-
                 var emoji = DiscordEmoji.FromName(e.Context.Client, ":no_entry:");
 
                 // let's wrap the response into an embed
@@ -168,15 +175,5 @@ namespace _7DayBot
                 await e.Context.RespondAsync(embed);
             }
         }
-    }
-
-    // this structure will hold data from config.json
-    public struct ConfigJson
-    {
-        [JsonProperty("token")]
-        public string Token { get; private set; }
-
-        [JsonProperty("prefix")]
-        public string CommandPrefix { get; private set; }
     }
 }
